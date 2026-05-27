@@ -1,306 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
+<meta charset="UTF-8" />
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, user-scalable=no"
-  />
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0, user-scalable=no"
+/>
 
-  <!-- AFRAME -->
-  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+<script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 
-  <!-- MINDAR -->
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
 
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-    }
+<style>
 
-    body{
-      overflow:hidden;
-      background:black;
-      width:100vw;
-      height:100vh;
-      font-family:Arial,sans-serif;
-    }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
 
-    canvas{
-      display:block;
-    }
+body{
+overflow:hidden;
+background:black;
+width:100vw;
+height:100vh;
+font-family:Arial,sans-serif;
+}
 
-    #loading{
-      position:fixed;
-      inset:0;
-      background:black;
-      z-index:9999;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      color:white;
-      font-size:18px;
-      transition:opacity .3s ease;
-    }
+#loading{
+position:fixed;
+inset:0;
+background:black;
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:9999;
+color:white;
+font-size:18px;
+transition:opacity .3s ease;
+}
 
-    #loading.hide{
-      opacity:0;
-      pointer-events:none;
-    }
+#loading.hide{
+opacity:0;
+pointer-events:none;
+}
 
-    #tap{
-      position:fixed;
-      bottom:25px;
-      left:50%;
-      transform:translateX(-50%);
-      background:rgba(0,0,0,.6);
-      color:white;
-      padding:10px 18px;
-      border-radius:12px;
-      font-size:14px;
-      z-index:999;
-    }
+#tap{
+position:fixed;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+background:rgba(0,0,0,.7);
+padding:12px 18px;
+border-radius:12px;
+color:white;
+font-size:14px;
+z-index:999;
+}
 
-    #tap.hide{
-      display:none;
-    }
-  </style>
+#tap.hide{
+display:none;
+}
+
+canvas{
+display:block;
+}
+
+</style>
 </head>
 
 <body>
 
-  <!-- LOADING -->
-  <div id="loading">Loading AR...</div>
+<div id="loading">Loading AR...</div>
 
-  <!-- AUDIO ENABLE -->
-  <div id="tap">Tap once to enable audio</div>
+<div id="tap">Tap once to enable audio</div>
 
-  <a-scene
+<a-scene
 
-    embedded
+embedded
 
-    color-space="sRGB"
+vr-mode-ui="enabled:false"
 
-    renderer="
-      colorManagement:true;
-      physicallyCorrectLights:false;
-      antialias:true;
-      precision:mediump;
-    "
+device-orientation-permission-ui="enabled:false"
 
-    vr-mode-ui="enabled:false"
-    device-orientation-permission-ui="enabled:false"
+renderer="
+antialias:true;
+alpha:true;
+precision:mediump;
+colorManagement:true;
+physicallyCorrectLights:false;
+"
 
-    mindar-image="
-      imageTargetSrc: targets.mind;
+mindar-image="
+imageTargetSrc: targets.mind;
 
-      autoStart: true;
+autoStart: true;
 
-      uiLoading: no;
-      uiScanning: yes;
-      uiError: no;
+uiLoading: no;
+uiScanning: yes;
+uiError: no;
 
-      maxTrack: 1;
+maxTrack: 1;
 
-      filterMinCF: 0.001;
-      filterBeta: 0.01;
+filterMinCF: 0.0001;
+filterBeta: 0.001;
 
-      warmupTolerance: 0;
-      missTolerance: 2;
-    "
-  >
+warmupTolerance: 0;
+missTolerance: 5;
+"
 
-    <!-- ASSETS -->
-    <a-assets timeout="10000">
+color-space="sRGB"
+>
 
-      <video
-        id="video"
+<a-assets timeout="15000">
 
-        src="video.mp4"
+<video
+id="video"
 
-        preload="auto"
+src="video.mp4"
 
-        crossorigin="anonymous"
+preload="auto"
 
-        playsinline
-        webkit-playsinline
+crossorigin="anonymous"
 
-        loop
-      ></video>
+playsinline
+webkit-playsinline
 
-    </a-assets>
+muted
 
-    <!-- CAMERA -->
-    <a-camera
-      position="0 0 0"
-      look-controls="enabled:false"
-    ></a-camera>
+loop
+></video>
 
-    <!-- TARGET -->
-    <a-entity
-      id="target"
-      mindar-image-target="targetIndex: 0"
-    >
+</a-assets>
 
-      <!-- VIDEO -->
-      <a-video
-        id="videoPlane"
+<a-camera
+position="0 0 0"
+look-controls="enabled:false"
+></a-camera>
 
-        src="#video"
+<a-entity
+id="target"
+mindar-image-target="targetIndex: 0"
+>
 
-        width="1"
-        height="1.5"
+<a-video
+id="videoPlane"
 
-        position="0 0 0"
+src="#video"
 
-        material="
-          shader:flat;
-          transparent:true;
-        "
-      ></a-video>
+position="0 0 0"
 
-    </a-entity>
+width="1"
+height="1.5"
 
-  </a-scene>
+material="
+shader:flat;
+transparent:true;
+"
+></a-video>
 
-  <script>
+</a-entity>
 
-    const scene = document.querySelector("a-scene");
+</a-scene>
 
-    const video = document.querySelector("#video");
+<script>
 
-    const target = document.querySelector("#target");
+const scene = document.querySelector("a-scene");
 
-    const loading = document.querySelector("#loading");
+const video = document.querySelector("#video");
 
-    const tap = document.querySelector("#tap");
+const target = document.querySelector("#target");
 
-    let audioEnabled = false;
+const loading = document.querySelector("#loading");
 
-    let trackingStarted = false;
+const tap = document.querySelector("#tap");
 
-    // REMOVE LOADING
-    scene.addEventListener("renderstart", () => {
+const videoPlane = document.querySelector("#videoPlane");
 
-      setTimeout(() => {
+let audioUnlocked = false;
 
-        loading.classList.add("hide");
+let isTracking = false;
 
-      }, 300);
+let lostTimeout = null;
 
-    });
 
-    // ENABLE AUDIO
-    async function unlockAudio(){
 
-      if(audioEnabled) return;
+// LOADING REMOVE
 
-      audioEnabled = true;
+scene.addEventListener("renderstart", ()=>{
 
-      video.muted = false;
+setTimeout(()=>{
 
-      try{
+loading.classList.add("hide");
 
-        await video.play();
+},300);
 
-        video.pause();
+});
 
-      }catch(e){}
 
-      tap.classList.add("hide");
-    }
 
-    document.body.addEventListener("click", unlockAudio);
+// AUDIO ENABLE
 
-    document.body.addEventListener("touchstart", unlockAudio);
+async function unlockAudio(){
 
-    // VIDEO FIT
-    video.addEventListener("loadedmetadata", () => {
+if(audioUnlocked) return;
 
-      const plane = document.querySelector("#videoPlane");
+audioUnlocked = true;
 
-      const vw = video.videoWidth;
+video.muted = false;
 
-      const vh = video.videoHeight;
+try{
 
-      const ratio = vw / vh;
+await video.play();
 
-      // PORTRAIT
-      if(ratio < 1){
+video.pause();
 
-        plane.setAttribute("width", "1");
+}catch(e){}
 
-        plane.setAttribute("height", 1 / ratio);
+tap.classList.add("hide");
 
-      }
+}
 
-      // LANDSCAPE
-      else{
+document.body.addEventListener("click", unlockAudio,{once:true});
 
-        plane.setAttribute("width", ratio);
+document.body.addEventListener("touchstart", unlockAudio,{once:true});
 
-        plane.setAttribute("height", "1");
 
-      }
 
-    });
+// VIDEO FIT INSIDE FRAME
 
-    // TARGET FOUND
-    target.addEventListener("targetFound", async () => {
+video.addEventListener("loadedmetadata", ()=>{
 
-      trackingStarted = true;
+const vw = video.videoWidth;
 
-      try{
+const vh = video.videoHeight;
 
-        if(audioEnabled){
+const ratio = vw / vh;
 
-          video.muted = false;
+if(ratio < 1){
 
-        }else{
+videoPlane.setAttribute("width", "1");
 
-          video.muted = true;
+videoPlane.setAttribute("height", 1 / ratio);
 
-        }
+}else{
 
-        await video.play();
+videoPlane.setAttribute("width", ratio);
 
-      }catch(e){}
+videoPlane.setAttribute("height", "1");
 
-    });
+}
 
-    // TARGET LOST
-    target.addEventListener("targetLost", () => {
+});
 
-      trackingStarted = false;
 
-      video.pause();
 
-    });
+// TARGET FOUND
 
-    // FORCE VIDEO READY
-    video.load();
+target.addEventListener("targetFound", async ()=>{
 
-    // IOS + ANDROID FIX
-    window.addEventListener("load", async () => {
+clearTimeout(lostTimeout);
 
-      try{
+if(isTracking) return;
 
-        video.muted = true;
+isTracking = true;
 
-        await video.play();
+try{
 
-        video.pause();
+if(audioUnlocked){
 
-      }catch(e){}
+video.muted = false;
 
-    });
+}else{
 
-  </script>
+video.muted = true;
+
+}
+
+await video.play();
+
+}catch(e){}
+
+});
+
+
+
+// TARGET LOST
+
+target.addEventListener("targetLost", ()=>{
+
+lostTimeout = setTimeout(()=>{
+
+isTracking = false;
+
+video.pause();
+
+},200);
+
+});
+
+
+
+// PRELOAD VIDEO
+
+window.addEventListener("load", async ()=>{
+
+try{
+
+video.muted = true;
+
+await video.play();
+
+video.pause();
+
+video.currentTime = 0;
+
+}catch(e){}
+
+});
+
+
+
+// MOBILE PERFORMANCE BOOST
+
+AFRAME.registerComponent('video-optimizer', {
+
+tick: function () {
+
+if(video.readyState >= 2){
+
+videoPlane.object3D.visible = true;
+
+}
+
+}
+
+});
+
+videoPlane.setAttribute('video-optimizer','');
+
+</script>
 
 </body>
-
 </html>
